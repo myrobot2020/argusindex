@@ -7,8 +7,8 @@ runs 3 functions
   to create a list of dataframe for EU and SA
   finally calculate VWAP
 
-Over time after debuggind will:
-Split into modules
+After debuggind will:
+Split into modules and convert to package
 Add test cases for function, data and environment
 Finally test in shiny server and docker for deployment
 
