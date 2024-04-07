@@ -1,5 +1,10 @@
 # Argus Commodities Indices Calculator
 
+shinyapp.io deployment
+
+https://myrobot2020.shinyapps.io/argusindex/
+
+
 This application is designed to calculate commodities indices based on user-provided deal data. It allows users to import a dataset, calculate the index price for each day included in the raw data, and display the results as a table and chart within the application. Additionally, users can download the output table as a CSV file.
 
 ## Getting Started
