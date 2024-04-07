@@ -1,7 +1,9 @@
 #Application works perfectly
 
-pacman::p_load(readr,lubridate,tidyverse,shiny,ggplot2,purrr,DT,testthat)
-
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+pacman::p_load(readr, lubridate, shiny, ggplot2, DT, testthat)
 
 ui <- fluidPage(
   titlePanel("Argus Commodities Indices Calculator"),
@@ -31,6 +33,7 @@ server <- function(input, output, session) {
     req(input$b)
     Data<-read.csv(input$b$datapath)
     Data$delvdate <- paste("1", Data$DELIVERY.MONTH, Data$DELIVERY.YEAR)
+    # Assumed the delivery date was "1st" of the month
     Data$DEAL.DATE <- dmy(Data$DEAL.DATE)
     Data$delvdate <- dmy(Data$delvdate)
     Data$datediff <- Data$delvdate - Data$DEAL.DATE
@@ -45,6 +48,7 @@ server <- function(input, output, session) {
     Data<-list(COAL2 = eu, COAL4 = sa)
     Data<-Data[[input$a]]
     Data <- aggregate(cbind(VOLUME, PRICE) ~ DEAL.DATE, data = Data, FUN = sum)
+    #Avoided dplyr due to tidy evaluation inconsistencies in shiny
     Data$VOLUME<-NULL
     Data$VWAP<-Data$PRICE
     Data$PRICE<-NULL
@@ -56,12 +60,12 @@ server <- function(input, output, session) {
       expect_true(ncol(s()) >= 9, "Input data does not have at least 9 columns")
     })
   })
-  
+  #check if input is correct
   
   output$c<-DT::renderDataTable({
     r()
   })
-  
+  #Use DT always 
   output$e<-renderPlot({
     ggplot(r(), aes(x = DEAL.DATE, y = VWAP)) +
       geom_line(color = "#00891a") +
