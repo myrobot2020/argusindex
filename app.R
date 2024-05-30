@@ -44,10 +44,12 @@ server <- function(input, output, session) {
     Data <- Data[Data$datediff >= 0 & Data$datediff <= 180, ]
     Data <- Data[Data$COMMODITY == "Coal", ]
     eu <- Data[Data$DELIVERY.LOCATION %in% c("ARA", "AMS", "ROT", "ANT"), ]
-    sa <- Data[Data$DELIVERY.LOCATION %in% c("SOT", "UK"), ]
+    sa <- Data[Data$DELIVERY.LOCATION %in% "SOT", ]
     Data<-list(COAL2 = eu, COAL4 = sa)
     Data<-Data[[input$a]]
-    Data <- aggregate(cbind(VOLUME, PRICE) ~ DEAL.DATE, data = Data, FUN = sum)
+    Data$Value <- Data$VOLUME * Data$PRICE
+    agg_data <- aggregate(cbind(Volume = Volume, Value = Value) ~ DEAL.DATE, data = Data, FUN = sum)
+    agg_data$VWAP <- agg_data$Value / agg_data$Volume    
     #Avoided dplyr due to tidy evaluation inconsistencies in shiny
     Data$VOLUME<-NULL
     Data$VWAP<-Data$PRICE
